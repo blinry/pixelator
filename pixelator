@@ -1,16 +1,20 @@
 #!/bin/sh
 
-IMG="Starry_Night.jpg"
-#IMG="Mona_Lisa.jpg"
-#IMG="Girl_with_a_Pearl_Earring.jpg"
+IMG="$1"
+
+WIDTH=$(identify -format "%w" "$IMG")
+HEIGHT=$(identify -format "%h" "$IMG")
+
+W=16
+H=$(ruby <<< "print ($W.0/$WIDTH*$HEIGHT).floor")
 
 mkdir -p tiles
 
 rm -f tiles/*
-magick "$IMG" -crop 16x12@ tiles/tile-%04d.png
+magick "$IMG" -crop ${W}x${H}@ tiles/tile-%04d.png
 
 for TILE in tiles/*; do
     mogrify +repage -gravity Center -crop 50%\! "$TILE"
 done
 
-montage -mode concatenate -tile 16x12 tiles/* "$IMG-pixelated.png"
+montage -mode concatenate -tile ${W}x${H} tiles/* "$IMG-pixelated.png"
