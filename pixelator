@@ -6,7 +6,7 @@ WIDTH=$(identify -format "%w" "$IMG")
 HEIGHT=$(identify -format "%h" "$IMG")
 
 W=16
-H=$(ruby <<< "print ($W.0/$WIDTH*$HEIGHT).floor")
+H=$(($W*$HEIGHT/$WIDTH))
 
 mkdir -p tiles
 
