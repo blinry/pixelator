@@ -1,0 +1,16 @@
+#!/bin/sh
+
+IMG="Starry_Night.jpg"
+#IMG="Mona_Lisa.jpg"
+#IMG="Girl_with_a_Pearl_Earring.jpg"
+
+mkdir -p tiles
+
+rm -f tiles/*
+magick "$IMG" -crop 16x12@ tiles/tile-%04d.png
+
+for TILE in tiles/*; do
+    mogrify +repage -gravity Center -crop 50%\! "$TILE"
+done
+
+montage -mode concatenate -tile 16x12 tiles/* "$IMG-pixelated.png"
